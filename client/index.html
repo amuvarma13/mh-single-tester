@@ -21,7 +21,10 @@
 
     <script>
         window.addEventListener('load', function() {
-            var socket = new WebSocket("ws://104.154.145.177:8080");
+            // let route = "ws://104.154.145.177:8080"
+            let route = "ws://localhost:8080"
+            var socket = new WebSocket(route);
+            window.socket = socket
 
             socket.onopen = function() {
                 console.log("WebSocket connection established");
@@ -38,19 +41,8 @@
 
         function sendMessage() {
             var message = document.getElementById("message").value;
-            var socket = new WebSocket("ws://104.154.145.177:8080");
-
-            socket.onopen = function() {
-                socket.send(message);
-            };
-
-            socket.onmessage = function(event) {
-                console.log("Received message: " + event.data);
-            };
-
-            socket.onclose = function(event) {
-                console.log("WebSocket closed with code: " + event.code);
-            };
+            var socket = window.socket  
+            socket.send(message);
         }
     </script>
 </body>
