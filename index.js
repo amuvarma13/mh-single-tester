@@ -11,7 +11,7 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
         console.log(`Received message: ${message}`);
-        if(!message.length.contains("{")){
+        if(!message.includes("{")){
             printInputTextAndSendRequest(message);
         }
     });
