@@ -11,7 +11,9 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
         console.log(`Received message: ${message}`);
-        printInputTextAndSendRequest(message);
+        if(message.length <30){
+            printInputTextAndSendRequest(message);
+        }
     });
 
     ws.on('close', () => {
