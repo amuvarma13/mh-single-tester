@@ -68,6 +68,8 @@ function printInputTextAndSendRequest(text) {
 
             for (let i = 0; i < allConnections.length; i++) {
                 allConnections[i].send(JSON.stringify(message));
+                allConnections[i].send(JSON.stringify(message));
+
             }
 
         })
