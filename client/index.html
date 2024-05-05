@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>WebSocket Example</title>
 </head>
+
 <body>
     <style>
         #message {
@@ -20,30 +22,78 @@
     <button id="sendButton" onclick="sendMessage()" style="font-size: 20px; padding: 10px;">Send</button>
 
     <script>
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             // let route = "ws://104.154.145.177:8080"
             let route = "ws://34.41.210.227:8080"
             var socket = new WebSocket(route);
             window.socket = socket
 
-            socket.onopen = function() {
+            socket.onopen = function () {
                 console.log("WebSocket connection established");
             };
 
-            socket.onmessage = function(event) {
-                console.log("Received message: " + event.data);
+            socket.onmessage = function (event) {
+
+                const base64String = JSON.parse(event.data).audioData;
+                const visemes = JSON.parse(event.data).visemes;
+
+                const totalDuration = visemes.reduce((sum, item) => sum + item.duration, 0);
+                console.log("totalDuration", totalDuration)
+                console.log("visemes", visemes)
+                const mimeType = "audio/wav"
+
+
+                function base64StringToBlob(base64, mimeType) {
+                    const byteCharacters = atob(base64);
+                    const byteArrays = [];
+
+                    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                        const slice = byteCharacters.slice(offset, offset + 512);
+                        const byteNumbers = new Array(slice.length);
+                        for (let i = 0; i < slice.length; i++) {
+                            byteNumbers[i] = slice.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        byteArrays.push(byteArray);
+                    }
+
+                    return new Blob(byteArrays, { type: mimeType });
+                }
+
+                function getAudioDuration(base64String, mimeType) {
+                    return new Promise((resolve, reject) => {
+                        const blob = base64StringToBlob(base64String, mimeType);
+                        const url = URL.createObjectURL(blob);
+                        const audio = new Audio(url);
+
+                        audio.addEventListener('loadedmetadata', () => {
+                            resolve(audio.duration);
+                            URL.revokeObjectURL(url); // Clean up URL object
+                        });
+
+                        audio.addEventListener('error', () => reject('Error loading audio'));
+                    });
+                }
+
+
+
+                getAudioDuration(base64String, mimeType)
+                    .then(duration => console.log('Duration:', duration*1000))
+                    .catch(error => console.error('Error:', error));
+
             };
 
-            socket.onclose = function(event) {
+            socket.onclose = function (event) {
                 console.log("WebSocket closed with code: " + event.code);
             };
         });
 
         function sendMessage() {
             var message = document.getElementById("message").value;
-            var socket = window.socket  
+            var socket = window.socket
             socket.send(message);
         }
     </script>
 </body>
-</h
+
+</html>

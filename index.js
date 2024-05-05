@@ -1,7 +1,7 @@
 
 const { WebSocketServer } = require('ws');
 const axios = require('axios');
-const remoteUrl = "http://34.32.228.101:8080/generate_animation";
+const remoteUrl = "http://34.91.82.222:8080/generate_animation";
 const wss = new WebSocketServer({ host: '0.0.0.0', port: 8080 });
 console.log('Server started');
 const allConnections = [];
