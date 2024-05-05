@@ -31,7 +31,7 @@ function printInputTextAndSendRequest(text) {
         text: text, 
         isFirstChunk: true, 
         emotion_vector:[0,0,1,0], 
-        addPadding: false,
+        add_post_padding: false,
     })
 
     // Send a GET request to the server
