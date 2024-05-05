@@ -30,7 +30,8 @@ function printInputTextAndSendRequest(text) {
     const inputData = JSON.stringify({ 
         text: text, 
         isFirstChunk: true, 
-        // emotion_vector:[0,0,1,0]
+        emotion_vector:[0,0,1,0], 
+        addPadding: false,
     })
 
     // Send a GET request to the server
@@ -59,7 +60,8 @@ function printInputTextAndSendRequest(text) {
                 visemes,
                 conversationIndex: currentConversationIndex,
                 uuid: "1234",
-                TTSSentence:text
+                TTSSentence:text, 
+                
             }
 
             console.log(message);
